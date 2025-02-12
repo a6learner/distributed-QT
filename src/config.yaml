@@ -1,16 +1,15 @@
-
 # Environment
 env:
   domain:  metaworld # dmc_suite 
-  task:  mw-hammer
+  task:  mw-door-lock
   modality: state # only use state
   frame_stack: 1 # only with pixels
   action_repeat: 2
   obs_shape: ???
   action_dim: ???
   episode_length: ???
-  max_num_episodes: 5000 # buffer size
-  train_steps: 1000000
+  max_num_episodes: 2500# buffer size
+  train_steps: 500000
   seed: 10
   discount: 0.98
   scale: ??? # used in reward scale
@@ -23,7 +22,7 @@ misc:
   seed_steps: 2000
   device: cuda
   eval_episodes: 10 # evaluate with 10 episodes
-  eval_freq: 10000 # evaluate every 10000 env steps
+  eval_freq: 5000 # evaluate every 10000 env steps
 
 
 
@@ -61,9 +60,16 @@ qtransformer:
   eps: 1e-5 
   decay: 1e-6
   grad_clip: 20
-  updtae_freq: 10 # set it to 5 with DMC, frequency to update target model
+  update_freq: 10 # set it to 5 with DMC, frequency to update target model
   tau: 0.005 # EMA coefficient
   n_step_td: 3
   use_MC_return: false # Monte-Carlo return, only with sparse reward tasks
   discount: ${env.discount} 
+
+
+# distributed
+distributed:
+  num_agents: 4  # agent数量
+  steps_per_update: 1000  # 每次更新前的步数
+  sync_frequency: 100  # 同步频率
 

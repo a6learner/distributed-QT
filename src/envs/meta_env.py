@@ -15,14 +15,16 @@ class MetaWorldWrapper(gym.Wrapper):
 		self.env._freeze_rand_vec = False
 
 	def reset(self, **kwargs):
-		obs = super().reset(**kwargs).astype(np.float32)
+		obs, info = super().reset(**kwargs)  # If reset returns a tuple of (obs, info)
+		obs = obs.astype(np.float32)  # Only convert the observation to float32
 		self.env.step(np.zeros(self.env.action_space.shape))
 		return obs
 
 	def step(self, action):
 		reward = 0
 		for _ in range(self.cfg.action_repeat):
-			obs, r, _, info = self.env.step(action.copy())
+			obs, r, done, extra_info,info  = self.env.step(action.copy())
+
 			reward += r
 		obs = obs.astype(np.float32)
 		return obs, reward, False, info

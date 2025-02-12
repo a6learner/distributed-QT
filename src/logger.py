@@ -1,4 +1,3 @@
-
 """
 Credits to https://github.com/nicklashansen/tdmpc/blob/main/src/logger.py
 """
@@ -13,6 +12,8 @@ import torch
 import pandas as pd
 from termcolor import colored
 from omegaconf import OmegaConf
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 CONSOLE_FORMAT = [('episode', 'E', 'int'), ('env_step', 'S', 'int'), ('episode_reward', 'R', 'float'), ('total_time', 'T', 'time')]
@@ -39,7 +40,8 @@ def print_run(cfg, reward=None):
 		   ('train steps', int(cfg.env.train_steps*cfg.env.action_repeat)),
 		   ('observations', 'x'.join([str(s) for s in cfg.env.obs_shape])),
 		   ('actions', cfg.env.action_dim),
-		   ('experiment', cfg.wandb.exp_name)]
+		   ('experiment', cfg.wandb.exp_name),
+		   ('agent_number', cfg.distributed.num_agents)]
 	if reward is not None:
 		kvs.append(('episode reward', colored(str(int(reward)), 'white', attrs=['bold'])))
 	w = np.max([len(limstr(str(kv[1]))) for kv in kvs]) + 21
@@ -160,4 +162,44 @@ class Logger(object):
 			keys = ['env_step', 'episode_reward', 'episode_success']
 			self._eval.append(np.array([d[keys[0]], d[keys[1]], d[keys[2]]]))
 			pd.DataFrame(np.array(self._eval)).to_csv(self._log_dir / 'eval.log', header=keys, index=None)
+			
+			# 调用可视化方法
+			self.visualize_eval_log()
+
 		self._print(d, category)
+
+
+	def visualize_eval_log(self):
+		"""可视化评估日志并保存图形"""
+		eval_log_path = self._log_dir / 'eval.log'
+
+		# 读取日志文件
+		df = pd.read_csv(eval_log_path)
+
+		# 设置图表样式
+		sns.set(style="whitegrid")
+
+		# 创建图形并绘制
+		fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+
+		# 绘制 Episode Reward vs Env Step
+		ax1.plot(df['env_step'], df['episode_reward'], color='b', label='Episode Reward', linewidth=2)
+		ax1.set_title('Episode Reward vs Environment Step')
+		ax1.set_xlabel('Environment Step')
+		ax1.set_ylabel('Episode Reward')
+		ax1.legend()
+
+		# 绘制 Episode Success vs Env Step
+		ax2.plot(df['env_step'], df['episode_success'], color='g', label='Episode Success', linewidth=2)
+		ax2.set_title('Episode Success vs Environment Step')
+		ax2.set_xlabel('Environment Step')
+		ax2.set_ylabel('Episode Success')
+		ax2.legend()
+
+		# 调整布局并保存图形
+		plt.tight_layout()
+
+		# 保存图形到 log 目录
+		visualization_path = self._log_dir / 'eval_visualization.png'
+		plt.savefig(visualization_path)
+		plt.close()  # 关闭图形，以释放内存

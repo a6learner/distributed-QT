@@ -18,6 +18,8 @@ conda activate qt
 Train the model by calling:
 ```
 python3 src/main.py env.domain=metaworld env.task=mw-hammer env.action_repeat=2 env.seed=1
+python src/main.py env.domain=metaworld env.task=mw-hammer env.action_repeat=2 env.seed=1 distributed.num_agents=4
+
 ```
 ``` env.domain``` can take ```metaworld``` or ```dmc_suite``` for [MetaWorld](https://meta-world.github.io) and [DeepMind Control Suite](https://github.com/deepmind/dm_control).
 

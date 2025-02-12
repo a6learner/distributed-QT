@@ -80,6 +80,7 @@ class Trainer:
                 # convert the discretize action into continuous before applying it to env
                 env_action = (action/self.cfg.qtransformer.num_bins*2-1) 
                 obs, reward, done, info = self.env.step(env_action.cpu().numpy())
+
                 episode += (obs, action, reward, done, info['success'])
                 t += 1
 

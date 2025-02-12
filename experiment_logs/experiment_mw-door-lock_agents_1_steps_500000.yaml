@@ -1,0 +1,16 @@
+duration_seconds: 6473.350864887238
+end_time: '2025-01-20 16:19:13'
+parameters:
+  num_agents: 1
+  task: mw-door-lock
+  train_steps: 500000
+start_time: '2025-01-20 14:31:19'
+status: failure
+stderr: "Error executing job with overrides: ['distributed.num_agents=1', 'env.train_steps=500000',\
+  \ 'env.task=mw-door-lock']\nTraceback (most recent call last):\n  File \"/home/wang/project/Distributed_Q-Transformer/src/main.py\"\
+  , line 23, in main\n    trainer.run()\n  File \"/home/wang/project/Distributed_Q-Transformer/src/distributed/trainer.py\"\
+  , line 140, in run\n    L.log({'total_time': time.time() - start_time},category='eval')\n\
+  \  File \"/home/wang/project/Distributed_Q-Transformer/src/logger.py\", line 163,\
+  \ in log\n    self._eval.append(np.array([d[keys[0]], d[keys[1]], d[keys[2]]]))\n\
+  \                                ~^^^^^^^^^\nKeyError: 'env_step'\n\nSet the environment\
+  \ variable HYDRA_FULL_ERROR=1 for a complete stack trace.\n"

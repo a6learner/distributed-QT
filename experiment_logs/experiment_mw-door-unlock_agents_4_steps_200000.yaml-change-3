@@ -1,0 +1,9 @@
+duration_seconds: 8464.903500795364
+end_time: '2025-02-04 11:12:45'
+parameters:
+  num_agents: 4
+  task: mw-door-unlock
+  train_steps: 200000
+start_time: '2025-02-04 08:51:40'
+status: success
+stderr: null
