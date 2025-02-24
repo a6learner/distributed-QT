@@ -26,6 +26,13 @@ class QTransformerServer:
         
         self.total_steps = 0
         
+        # 添加学习率调度
+        if cfg.env.domain == "metaworld":
+            self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(
+                self.optimizer, 
+                lambda steps: (1 - (steps/cfg.env.train_steps))
+            )
+        
     def update_networks(self, batch_experiences: List[Dict]):
         """更新网络,处理多个agent的经验"""
         metrics = dict()
@@ -65,18 +72,22 @@ class QTransformerServer:
         # 优化器步骤
         self.optimizer.step()
         
+        # 添加学习率调度步骤
+        if self.cfg.env.domain == "metaworld":
+            self.lr_scheduler.step()
+        
         # 更新目标网络
         if self.total_steps % self.cfg.qtransformer.update_freq == 0:
             ema(self.q_transformer, self.target_network, self.cfg.qtransformer.tau)
         
         self.total_steps += 1
 
-        # 新增学习率调整逻辑
-        if self.total_steps == 180000:
-            num_agents = self.cfg.distributed.num_agents
-            new_lr = self.optimizer.param_groups[0]['lr'] / num_agents
-            self.optimizer.param_groups[0]['lr'] = new_lr
-            print(f"Adjusted learning rate to {new_lr} at step {self.total_steps}")
+        # # 新增学习率调整逻辑
+        # if self.total_steps == 180000:
+        #     num_agents = self.cfg.distributed.num_agents
+        #     new_lr = self.optimizer.param_groups[0]['lr'] / num_agents
+        #     self.optimizer.param_groups[0]['lr'] = new_lr
+        #     print(f"Adjusted learning rate to {new_lr} at step {self.total_steps}")
         
         # 评估模式
         self.q_transformer.eval()

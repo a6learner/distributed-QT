@@ -16,6 +16,7 @@ from utils import ReplayBuffer, Episode
 from envs import dmc_env, meta_env
 from distributed.server import QTransformerServer
 from distributed.agent import DistributedAgent
+import math
 
 __LOGS__ = 'logs'
 __MEDIA__ = 'media'
@@ -51,7 +52,9 @@ class DistributedTrainer:
         self.original_train_steps = cfg.env.train_steps
 
         # 创建服务器和多个agent(create server and several agents )
-        # self.cfg.qtransformer.lr = self.cfg.qtransformer.lr/self.cfg.distributed.num_agents
+        # change the lr
+        # if self.cfg.distributed.num_agents > 1:
+        #     self.cfg.qtransformer.lr = math.log(self.cfg.distributed.num_agents) * self.cfg.qtransformer.lr
         self.server = QTransformerServer(self.cfg)
         self.agents = []
         for i in range(cfg.distributed.num_agents):

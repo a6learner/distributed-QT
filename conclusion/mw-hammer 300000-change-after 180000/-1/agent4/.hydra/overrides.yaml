@@ -1,0 +1,3 @@
+- distributed.num_agents=4
+- env.train_steps=300000
+- env.task=mw-hammer

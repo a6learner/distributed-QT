@@ -22,7 +22,7 @@ def run_experiment(params, log_dir):
     duration = end_time - start_time
 
     # 保存实验结果到日志
-    log_file = log_dir / f"experiment_{params['task']}_agents_{params['num_agents']}_steps_{params['train_steps']}.yaml-change-after180000-1"
+    log_file = log_dir / f"experiment_{params['task']}_agents_{params['num_agents']}_steps_{params['train_steps']}.yaml-change-log"
     log_data = {
         'parameters': params,
         'start_time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time)),
@@ -45,7 +45,7 @@ def main():
 
     # 实验参数组合
     experiment_params = {
-        'num_agents': [1,4,7,11],
+        'num_agents': [1],
         'train_steps': [300000],
         'task': ['mw-door-unlock']
     }
