@@ -1,7 +1,7 @@
 # Environment
 env:
   domain:  metaworld # dmc_suite 
-  task:  mw-door-lock
+  task:  mw-door-unlock
   modality: state # only use state
   frame_stack: 1 # only with pixels
   action_repeat: 2
@@ -69,7 +69,10 @@ qtransformer:
 
 # distributed
 distributed:
-  num_agents: 4  # agent数量
+  num_agents: 1  # agent数量
   steps_per_update: 1000  # 每次更新前的步数
   sync_frequency: 100  # 同步频率
 
+noise:
+  mean: 0
+  variance: 1 

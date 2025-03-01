@@ -112,13 +112,12 @@ hydra:
     hydra:
     - hydra.mode=RUN
     task:
-    - distributed.num_agents=1
-    - env.train_steps=300000
-    - env.task=mw-door-unlock
+    - noise.mean=0
+    - noise.variance=0.1
   job:
     name: main
     chdir: null
-    override_dirname: distributed.num_agents=1,env.task=mw-door-unlock,env.train_steps=300000
+    override_dirname: noise.mean=0,noise.variance=0.1
     id: ???
     num: ???
     config_name: config
@@ -143,7 +142,7 @@ hydra:
     - path: ''
       schema: structured
       provider: schema
-    output_dir: /home/wang/project/Distributed_Q-Transformer/outputs/2025-02-18/13-54-18
+    output_dir: /home/wang/project/Distributed_Q-Transformer/outputs/2025-03-01/23-42-38
     choices:
       hydra/env: default
       hydra/callbacks: null

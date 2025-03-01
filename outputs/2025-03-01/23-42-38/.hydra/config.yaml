@@ -1,6 +1,6 @@
 env:
   domain: metaworld
-  task: mw-door-unlock
+  task: mw-door-lock
   modality: state
   frame_stack: 1
   action_repeat: 2
@@ -8,7 +8,7 @@ env:
   action_dim: ???
   episode_length: ???
   max_num_episodes: 2500# buffer size
-  train_steps: 300000
+  train_steps: 500000
   seed: 10
   discount: 0.98
   scale: ???
@@ -54,6 +54,9 @@ qtransformer:
   use_MC_return: false
   discount: ${env.discount}
 distributed:
-  num_agents: 1
+  num_agents: 4
   steps_per_update: 1000
   sync_frequency: 100
+noise:
+  mean: 0
+  variance: 0.1

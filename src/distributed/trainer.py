@@ -101,6 +101,11 @@ class DistributedTrainer:
                     # convert the discretize action into continuous before applying it to env
                     env_action = (action.numpy()/self.cfg.qtransformer.num_bins*2-1) 
                     obs, reward, done, info = env.step(env_action)
+                   
+                    # mean：0,1,10 variance: 1
+                    # mean: 0 variance: 10,100,0.1
+                    noise = np.random.normal(self.cfg.noise.mean, self.cfg.noise.variance, size=reward.shape)
+                    reward = reward + noise
                     episode += (obs, action, reward, done, info['success'])
                     t += 1
 

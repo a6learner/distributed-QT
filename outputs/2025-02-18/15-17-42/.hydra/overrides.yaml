@@ -1,3 +1,0 @@
-- distributed.num_agents=1
-- env.train_steps=300000
-- env.task=mw-door-unlock
