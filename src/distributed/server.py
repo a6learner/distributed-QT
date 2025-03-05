@@ -6,6 +6,7 @@ import numpy as np
 from copy import deepcopy
 from utils import ema
 
+
 class QTransformerServer:
     def __init__(self, cfg):
         self.cfg = cfg
@@ -29,9 +30,16 @@ class QTransformerServer:
         # 添加学习率调度
         if cfg.env.domain == "metaworld":
             self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(
-                self.optimizer, 
-                lambda steps: (1 - (steps/cfg.env.train_steps))
+                self.optimizer,
+                lambda steps: (1 - steps/cfg.env.train_steps) if cfg.distributed.num_agents == 1  # n=1时线性衰减
+                else 1 / (1 + np.log(cfg.distributed.num_agents) * (steps / cfg.env.train_steps))  # n>1时对数衰减
             )
+        # # 修改后的线性衰减策略
+        # if cfg.env.domain == "metaworld":
+        #     self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(
+        #         self.optimizer,
+        #         lambda steps: max(1 - (steps * cfg.distributed.num_agents) / cfg.env.train_steps, 0)
+        #     )
         
     def update_networks(self, batch_experiences: List[Dict]):
         """更新网络,处理多个agent的经验"""
@@ -129,3 +137,4 @@ class QTransformerServer:
     def get_state_dict(self):
         """获取当前网络状态"""
         return self.q_transformer.state_dict() 
+

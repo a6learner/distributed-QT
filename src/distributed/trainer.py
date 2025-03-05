@@ -104,7 +104,7 @@ class DistributedTrainer:
                    
                     # mean：0,1,10 variance: 1
                     # mean: 0 variance: 10,100,0.1
-                    noise = np.random.normal(self.cfg.noise.mean, self.cfg.noise.variance, size=reward.shape)
+                    noise = np.random.normal(self.cfg.noise.mean, self.cfg.noise.variance)
                     reward = reward + noise
                     episode += (obs, action, reward, done, info['success'])
                     t += 1

@@ -45,8 +45,8 @@ def main():
 
     # 实验参数组合
     experiment_params = {
-        'num_agents': [1],
-        'train_steps': [300000],
+        'num_agents': [1,4,7,11],
+        'train_steps': [500000],
         'task': ['mw-door-unlock']
     }
 
