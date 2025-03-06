@@ -5,6 +5,7 @@ from typing import Dict, List
 import numpy as np
 from copy import deepcopy
 from utils import ema
+import math
 
 
 class QTransformerServer:
@@ -27,14 +28,24 @@ class QTransformerServer:
         
         self.total_steps = 0
         
-        # 添加学习率调度
+        # learning rate scheduler
+        #linear decay with logn
         if cfg.env.domain == "metaworld":
             self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(
                 self.optimizer,
-                lambda steps: (1 - steps/cfg.env.train_steps) if cfg.distributed.num_agents == 1  # n=1时线性衰减
-                else 1 / (1 + np.log(cfg.distributed.num_agents) * (steps / cfg.env.train_steps))  # n>1时对数衰减
+                lambda steps: (
+                    max(1 - steps/cfg.env.train_steps, 0) if cfg.distributed.num_agents == 1 
+                    else max(1 - (math.log(cfg.distributed.num_agents) * steps)/cfg.env.train_steps, 3e-5)
+                )
             )
-        # # 修改后的线性衰减策略
+        # # log curve
+        # if cfg.env.domain == "metaworld":
+        #     self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(
+        #         self.optimizer,
+        #         lambda steps: (1 - steps/cfg.env.train_steps) if cfg.distributed.num_agents == 1  # n=1时线性衰减
+        #         else 1 / (1 + np.log(cfg.distributed.num_agents) * (steps / cfg.env.train_steps))  # n>1时对数衰减
+        #     )
+        # # linear decay with n
         # if cfg.env.domain == "metaworld":
         #     self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(
         #         self.optimizer,
