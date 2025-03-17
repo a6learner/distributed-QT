@@ -29,15 +29,15 @@ class QTransformerServer:
         self.total_steps = 0
         
         # learning rate scheduler
-        #linear decay with logn
-        if cfg.env.domain == "metaworld":
-            self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(
-                self.optimizer,
-                lambda steps: (
-                    max(1 - steps/cfg.env.train_steps, 0) if cfg.distributed.num_agents == 1 
-                    else max(1 - (math.log(cfg.distributed.num_agents) * steps)/cfg.env.train_steps, 3e-5)
-                )
-            )
+        # #linear decay with logn
+        # if cfg.env.domain == "metaworld":
+        #     self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(
+        #         self.optimizer,
+        #         lambda steps: (
+        #             max(1 - steps/cfg.env.train_steps, 0) if cfg.distributed.num_agents == 1 
+        #             else max(1 - (math.log(cfg.distributed.num_agents) * steps)/cfg.env.train_steps, 3e-5)
+        #         )
+        #     )
         # # log curve
         # if cfg.env.domain == "metaworld":
         #     self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(

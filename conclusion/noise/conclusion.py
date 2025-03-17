@@ -7,7 +7,7 @@ import re
 base_dir = './conclusion/noise'
 files = [f for f in os.listdir(base_dir) if re.search(r'\d+$', f) and (not f.startswith('0'))]
 # 新增排序逻辑：提取文件名中的数值部分进行排序
-# files = sorted(files, key=lambda x: float(x.split(',')[0])) 
+files = sorted(files, key=lambda x: float(x.split(',')[0])) 
 colors = plt.cm.tab10.colors  
 linestyles = ['-', '--', '-.', ':'] * 3  
 style_cycler = cycler(color=colors) + cycler(linestyle=linestyles[:len(colors)])
