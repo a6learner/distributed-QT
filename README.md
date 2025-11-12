@@ -1,13 +1,14 @@
 # 🧠 Distributed Q-Transformer (DQT)
-**Official Implementation of “Scalability and Noise Resilience in Q-Transformer” (Wang, 2024)**
+**Implementation of “Scalability and Noise Resilience in Q-Transformer” (Wang, 2024)**
 **分布式 Q-Transformer：可扩展性与鲁棒性研究实现**
-
+📄 [论文链接](https://openreview.net/pdf?id=WQupWGepAO)
 ---
 
 ## 📘 Overview | 项目简介
 
-This project extends **Google DeepMind’s Q-Transformer** into a **distributed multi-agent reinforcement learning (RL)** framework, focusing on **scalability** and **robustness under noisy rewards**.
-本项目将 **Q-Transformer 模型** 扩展为 **多智能体分布式强化学习架构**，系统研究了其在 **噪声环境下的鲁棒性** 与 **分布式训练性能**。
+This project is built upon [lucidrains/q-transformer](https://github.com/lucidrains/q-transformer),
+
+extending its core architecture to a distributed multi-agent setting with enhanced noise robustness and scalability analysis.
 
 ---
 
