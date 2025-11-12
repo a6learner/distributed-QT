@@ -1,50 +1,81 @@
-# Q-Transformer
-<img src="https://github.com/2M-kotb/Q-Transformer/blob/main/QT.png" width=40% height=40%>
+# 🧠 Distributed Q-Transformer (DQT)
+**Official Implementation of “Scalability and Noise Resilience in Q-Transformer” (Wang, 2024)**
+**分布式 Q-Transformer：可扩展性与鲁棒性研究实现**
 
-This is an adaptive version of [Q-Transformer](https://qtransformer.github.io/) model from Google Deepmind, in which it only works with state-based tasks in an online RL scenario.
-This model is used in the following paper:
+---
 
-[QT-TDM: Planning With Transformer Dynamics Model and Autoregressive Q-Learning](https://arxiv.org/pdf/2407.18841v2)
+## 📘 Overview | 项目简介
 
-__Paper GitHub:__ [QT-TDM](https://github.com/2M-kotb/QT-TDM/tree/main)
+This project extends **Google DeepMind’s Q-Transformer** into a **distributed multi-agent reinforcement learning (RL)** framework, focusing on **scalability** and **robustness under noisy rewards**.
+本项目将 **Q-Transformer 模型** 扩展为 **多智能体分布式强化学习架构**，系统研究了其在 **噪声环境下的鲁棒性** 与 **分布式训练性能**。
 
+---
 
-# Instructions
-Install dependencies using ``` conda ```:
-```
-conda env create -f environment.yaml
-conda activate qt
-```
-Train the model by calling:
-```
-python3 src/main.py env.domain=metaworld env.task=mw-hammer env.action_repeat=2 env.seed=1
-python src/main.py env.domain=metaworld env.task=mw-hammer env.action_repeat=2 env.seed=1 distributed.num_agents=4
+## 🚀 Quick Start | 快速开始
 
-```
-``` env.domain``` can take ```metaworld``` or ```dmc_suite``` for [MetaWorld](https://meta-world.github.io) and [DeepMind Control Suite](https://github.com/deepmind/dm_control).
-
-For ```dmc_suite``` set ```update_freq: 5``` in ```config.yaml```.
-
-For ```sparse reward tasks``` set ```use_MC_return: true``` in ```config.yaml```.
-
-To use [Weights&Biases](https://wandb.ai/site/) for logging, set up ```wandb``` variables inside ```config.yaml```.
-
-# Citation
-cite the paper as follows:
-```
-@ARTICLE{qttdm,
-  author={Kotb, Mostafa and Weber, Cornelius and Hafez, Muhammad Burhan and Wermter, Stefan},
-  journal={IEEE Robotics and Automation Letters}, 
-  title={QT-TDM: Planning With Transformer Dynamics Model and Autoregressive Q-Learning}, 
-  year={2025},
-  volume={10},
-  number={1},
-  pages={112-119},
-  doi={10.1109/LRA.2024.3504341}}
+### 1️⃣ Setup Environment / 环境配置
+```bash
+git clone https://github.com/<username>/Distributed-QT.git
+cd Distributed-QT
+conda env create -f environment.yml
+conda activate dqt
 ```
 
-# Credits
-* IRIS: https://github.com/eloialonso/iris/tree/main
-* minGPT: https://github.com/karpathy/minGPT
-* Unofficial implementation of Q-Transformer: https://github.com/lucidrains/q-transformer
+### 2️⃣ Run Distributed Training / 运行分布式训练
+```bash
+python src/main.py --num_agents 4 --train_steps 300000 --task mw-door-unlock
+```
 
+### 3️⃣ Run Noise Robustness Test / 噪声鲁棒性测试
+```bash
+python scripts/run_noise_experiments.py --noise_mean 0 --noise_variance 1.0
+```
+
+All logs and visual outputs will be generated under `experiment_logs/` and `outputs/`.
+
+---
+
+## 📂 Directory Structure | 项目结构
+
+```
+DISTRIBUTED-QT/
+├── src/
+│   ├── distributed/     # 分布式核心模块（agent / server / trainer）
+│   ├── QTransformer.py  # 主模型定义
+│   ├── main.py          # 训练入口
+│   └── config.yaml      # 配置文件
+├── scripts/             # 实验脚本与可视化
+├── conclusion/          # 实验结论与图表
+├── experiment_logs/     # 日志与指标
+├── outputs/             # 输出结果
+└── environment.yml
+```
+
+---
+
+## 🧪 Experiments | 实验简述
+
+We conducted controlled experiments on **MetaWorld Door-Unlock**, testing scalability across multiple agents and evaluating robustness under noisy rewards.
+本研究在 **MetaWorld Door-Unlock 任务** 上进行系统测试，涉及不同智能体数量和噪声环境设置。
+
+- **Distributed Training:**
+  Compared configurations with 1, 4, 7, and 11 agents under identical settings.
+  Multi-agent setups (esp. 7 agents) showed **faster convergence** and **more stable reward curves** than single-agent baselines.
+
+- **Noise Robustness:**
+  Added Gaussian noise (mean 0–10, variance 0.1–100) to rewards.
+  Median-based filtering effectively reduced performance degradation under moderate noise (variance ≤ 1.0).
+
+- **Learning Rate Schedules:**
+  Evaluated linear, log curve, and adaptive decay strategies.
+  Log-based decay yielded **smooth convergence** across varying agent counts.
+
+Overall, DQT achieved **higher stability and sample efficiency**, confirming the effectiveness of distributed and robust training strategies.
+总体结果表明，分布式 Q-Transformer 在**收敛速度**、**稳定性**及**鲁棒性**方面均优于单智能体。
+
+---
+
+
+✅ **Summary / 总结：**
+Distributed Q-Transformer demonstrates **efficient scalable training** and **robust performance under noise**, offering a practical framework for real-world reinforcement learning.
+分布式 Q-Transformer 在**可扩展训练与噪声鲁棒性**方面表现优越，为强化学习的工程化应用提供了可行范式。
